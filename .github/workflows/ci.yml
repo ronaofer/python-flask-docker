@@ -17,7 +17,7 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-    - name: Prepare
+    - name: Test container locally
       run: |
           docker build --tag next .
           docker run --detach --publish 5000:3000 next

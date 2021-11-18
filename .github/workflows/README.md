@@ -1,13 +1,27 @@
-# Build end-to-end CI/CD capabilities directly in GitHub
-With GitHub Actions, you can create and set up workflows in your repository to build, test, and deploy your code to Azure. This webinar training series is for teams looking to build end-to-end continuous integration (CI) and continuous deployment (CD) capabilities directly in their GitHub repositories.
+#python-flask-docker
+##Basic Python Flask app in Docker which prints the hostname and IP of the container
 
-We’ll show you how to create custom CI workflows using GitHub Actions that automate building and testing your code so that you can get immediate feedback on code changes to detect and resolve bugs faster, saving you time.
+Build application
+Build the Docker image manually by cloning the Git repo. Dependencies must be in a file at the project root, named requirements.txt.
 
-To automate the deployment process and help to deploy tested, stable code changes to customers more quickly, we’ll also show you how to use GitHub Actions to create custom CD workflows.
+$ git clone https://github.com/au79/python-flask-docker.git
+$ cd python-flask-docker
+$ docker build -t au79/python-flask-docker .
+Run the container
+Create a container from the image. Bind mount your app directory t /app on the server.
 
-Presentations
-Download presentations in PPTX format
+$ docker run --name my-container -d -p 5000:5000 -v "$(pwd)/app":/app au79/python-flask-docker
+Now visit http://localhost:5000
 
-Introduction to GitHub Actions
-Continuous integration using GitHub Actions
-Deploy applications to Azure using GitHub Actions
+ The hostname of the container is 6095273a4e9b and its IP is 172.17.0.2. 
+Verify the running container
+Verify by checking the container ip and hostname (ID):
+
+$ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-container
+172.17.0.2
+$ docker inspect -f '{{ .Config.Hostname }}' my-container
+6095273a4e9b
+Live updates
+Flask runs in development mode, any changes to files in the bind mount directory will trigger a server restart.
+
+Note that the container must be rebuilt to pick up changes to dependencies in requirements.txt.
